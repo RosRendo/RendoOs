@@ -15,7 +15,8 @@ const projects = [
   { name: 'Orchestrator', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\Orchestrator' },
   { name: 'Ecommerce', path: 'D:\\FOR RENDO (ONLY )\\Ecommerce\\Ecommerce' },
   { name: 'PrivateTutor', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\PrivateTutor' },
-  { name: 'POS_SYSTEM', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\POS_SYSTEM' }
+  { name: 'POS_SYSTEM', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\POS_SYSTEM' },
+  { name: 'CV-Gen', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\CV-Gen' }
 ];
 
 const results = [];

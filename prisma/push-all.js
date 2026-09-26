@@ -13,7 +13,8 @@ const projects = [
   { name: 'Real-Estate', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\Real-Estate' },
   { name: 'Orchestrator', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\Orchestrator' },
   { name: 'PrivateTutor', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\PrivateTutor' },
-  { name: 'POS_SYSTEM', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\POS_SYSTEM' }
+  { name: 'POS_SYSTEM', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\POS_SYSTEM' },
+  { name: 'CV-Gen', path: 'D:\\FOR RENDO (ONLY )\\Personal Project\\CV-Gen' }
 ];
 
 const results = [];
