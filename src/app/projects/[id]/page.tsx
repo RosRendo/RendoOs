@@ -38,6 +38,7 @@ import {
 import MermaidViewer from '@/components/MermaidViewer';
 import TechIcon, { TechBadge } from '@/components/TechIcon';
 import ProjectRunnerButton from '@/components/ProjectRunnerButton';
+import ReadmeViewer from '@/components/ReadmeViewer';
 import { getStatusBadge, getHealthBadge, formatTimeAgo, parseTechStack } from '@/lib/utils';
 import { ProjectDetail, TaskItem, BlockerItem, IdeaItem, LinkItem, TaskBucket } from '@/lib/types';
 
@@ -51,7 +52,7 @@ export default function ProjectDetailPage({
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'tasks' | 'overview' | 'flow' | 'architecture' | 'ideas'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'overview' | 'readme' | 'flow' | 'architecture' | 'ideas'>('tasks');
   const [taskBucketFilter, setTaskBucketFilter] = useState<'ALL' | 'NOW' | 'NEXT' | 'LATER'>('ALL');
 
   // Quick inputs
@@ -904,6 +905,7 @@ export default function ProjectDetailPage({
           {[
             { id: 'tasks', label: 'Tasks & Checklist', count: project.tasks?.length ?? 0 },
             { id: 'overview', label: 'Overview & Tech Stack' },
+            { id: 'readme', label: 'README.md' },
             { id: 'flow', label: 'How It Works' },
             { id: 'architecture', label: 'Architecture' },
             { id: 'ideas', label: 'Project Ideas', count: project.ideas?.length ?? 0 },
@@ -1336,6 +1338,13 @@ export default function ProjectDetailPage({
             </div>
           </div>
         </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* TAB CONTENT: README.MD (LIVE DISK VIEWER & EDITOR)              */}
+      {/* ============================================================== */}
+      {activeTab === 'readme' && (
+        <ReadmeViewer projectId={project.id} projectName={project.name} />
       )}
 
       {/* ============================================================== */}
