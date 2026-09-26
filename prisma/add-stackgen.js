@@ -125,6 +125,7 @@ async function main() {
 ### 4. Production Readiness Scanner & Master Checklist
 - Inspects GitHub repositories or proposed architecture against 50+ enterprise production standards (rate limiting, security headers, database migrations, CI/CD).`,
     folderPath: 'D:\\FOR RENDO (ONLY )\\Personal Project\\Stackgen\\frontend',
+    repoUrl: 'https://github.com/ROS-RENDO/Stackgen',
     runScript: 'npm run dev -- -p 3005',
     port: 3005,
     isRunning: false,
