@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String   @default("Rendo")
+  handle    String   @default("@rendo")
+  avatar    String?
+  bio       String?  @default("Software Engineer & Builder")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id               String    @id @default(uuid())
+  name             String
+  slug             String    @unique
+  description      String
+  status           String    @default("ACTIVE") // ACTIVE, EXPERIMENT, PAUSED, ARCHIVED, IDEA
+  isPrimary        Boolean   @default(false)
+  progress         Int       @default(0) // 0 to 100
+  image            String?
+  mobileImage      String?   // Mobile screenshot (React Native / Expo)
+  currentMilestone String?
+  overview         String?   // What is this? Who is it for? Why does it exist?
+  techStack        String?   // JSON string with { frontend: [], backend: [], database: [], infrastructure: [] }
+  architecture     String?   // Mermaid diagram code
+  flowExplainer    String?   // How it works: user journey, features, flow narrative (markdown)
+  repoUrl          String?
+  liveUrl          String?
+  folderPath       String?   // Local absolute directory path (e.g. D:\Projects\...)
+  runScript        String?   @default("npm run dev") // Command to run frontend
+  port             Int?      // Port where frontend runs (e.g. 3000, 3010)
+  isRunning        Boolean   @default(false) // Frontend process running status
+
+  backendPath      String?   // Backend directory path (or subfolder e.g. backend/)
+  backendScript    String?   // Command to run backend (e.g. npm run start:dev / python main.py)
+  backendPort      Int?      // Port where backend runs (e.g. 4000, 8000)
+  isBackendRunning Boolean   @default(false) // Backend process running status
+
+  extraPath        String?   // Third service directory (e.g. React Native Expo)
+  extraScript      String?   // Command for third service (e.g. npx expo start)
+  extraPort        Int?      // Port for third service (e.g. 8081)
+  extraName        String?   @default("Mobile") // Label shown on the button
+  isExtraRunning   Boolean   @default(false)  // Third service running status
+
+  health           String    @default("HEALTHY") // HEALTHY, ATTENTION, BLOCKED
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  tasks            Task[]
+  blockers         Blocker[]
+  ideas            Idea[]
+  links            Link[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  projectId   String
+  title       String
+  description String?
+  status      String    @default("TODO") // TODO, DONE
+  bucket      String    @default("NOW") // NOW, NEXT, LATER
+  priority    String    @default("MEDIUM") // HIGH, MEDIUM, LOW
+  dueDate     DateTime?
+  order       Int       @default(0)
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Blocker {
+  id          String   @id @default(uuid())
+  projectId   String
+  title       String
+  description String?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Idea {
+  id                   String   @id @default(uuid())
+  title                String
+  description          String?
+  projectId            String?
+  convertedToProjectId String?
+  tags                 String?  // comma-separated or json
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  project              Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+}
+
+model Link {
+  id        String   @id @default(uuid())
+  projectId String
+  title     String
+  url       String
+  type      String   @default("OTHER") // GITHUB, FIGMA, PROD, STAGING, DOCS, OTHER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
