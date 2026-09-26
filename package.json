@@ -9,7 +9,9 @@
     "lint": "next lint",
     "db:push": "prisma db push",
     "db:seed": "node prisma/seed.js",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "repos:push": "node prisma/push-all.js",
+    "repos:audit": "node prisma/inspect-all.js"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
