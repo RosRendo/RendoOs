@@ -36,7 +36,7 @@ import {
   Eye,
 } from 'lucide-react';
 import MermaidViewer from '@/components/MermaidViewer';
-import TechIcon, { TechBadge } from '@/components/TechIcon';
+import TechIcon, { TechBadge, GithubIcon } from '@/components/TechIcon';
 import ProjectRunnerButton from '@/components/ProjectRunnerButton';
 import ReadmeViewer from '@/components/ReadmeViewer';
 import { getStatusBadge, getHealthBadge, formatTimeAgo, parseTechStack } from '@/lib/utils';
@@ -531,17 +531,59 @@ export default function ProjectDetailPage({
   const resolvedBlockers = project.blockers?.filter((b) => b.resolved) || [];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-200">
+    <div className="space-y-6 animate-in fade-in duration-200">
       {/* Back button & quick action row */}
-      <div className="flex items-center justify-between">
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" /> Back to projects
-        </Link>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-2 text-xs font-mono">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-1 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Projects
+          </Link>
+          <span className="text-zinc-400">/</span>
+          <span className="font-semibold text-zinc-800 dark:text-zinc-200 truncate max-w-[200px]">
+            {project.name}
+          </span>
+          {project.repoUrl && (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors"
+              title="Open GitHub"
+            >
+              <GithubIcon className="w-3 h-3" />
+              <span>repo ↗</span>
+            </a>
+          )}
+        </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {/* Live Port Launcher Links */}
+          {project.isRunning && project.port && (
+            <a
+              href={`http://localhost:${project.port}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-colors"
+              title="Open Frontend"
+            >
+              FE :{project.port} ↗
+            </a>
+          )}
+          {project.isBackendRunning && project.backendPort && (
+            <a
+              href={`http://localhost:${project.backendPort}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:bg-blue-500/20 transition-colors"
+              title="Open Backend"
+            >
+              BE :{project.backendPort} ↗
+            </a>
+          )}
+
           <ProjectRunnerButton
             projectId={project.id}
             projectName={project.name}
@@ -563,22 +605,24 @@ export default function ProjectDetailPage({
 
           <button
             onClick={handleTogglePrimary}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-pointer ${project.isPrimary
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border transition-all cursor-pointer ${
+              project.isPrimary
                 ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
                 : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 border-zinc-200 dark:border-zinc-800'
-              }`}
+            }`}
           >
             <Flame
-              className={`w-3.5 h-3.5 ${project.isPrimary ? 'fill-rose-500 text-rose-500' : 'text-zinc-400'
-                }`}
+              className={`w-3.5 h-3.5 ${
+                project.isPrimary ? 'fill-rose-500 text-rose-500' : 'text-zinc-400'
+              }`}
             />
-            {project.isPrimary ? 'Current Focus' : 'Set as Focus'}
+            {project.isPrimary ? 'Focus' : 'Set Focus'}
           </button>
 
           <select
             value={project.status}
             onChange={(e) => handleStatusChange(e.target.value)}
-            className="text-xs font-mono bg-white dark:bg-[#11131a] border border-zinc-200 dark:border-zinc-800 rounded-lg px-2.5 py-1.5 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+            className="text-xs font-mono bg-white dark:bg-[#0c0d12] border border-zinc-200 dark:border-zinc-800 rounded-md px-2 py-1 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400 cursor-pointer"
           >
             <option value="ACTIVE">ACTIVE</option>
             <option value="EXPERIMENT">EXPERIMENT</option>
@@ -589,7 +633,7 @@ export default function ProjectDetailPage({
 
           <button
             onClick={() => setShowDeleteModal(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-rose-500/20 text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/40 transition-all cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border border-rose-500/20 text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/40 transition-all cursor-pointer"
             title="Delete project"
           >
             <Trash2 className="w-3.5 h-3.5" />
@@ -601,7 +645,7 @@ export default function ProjectDetailPage({
       {/* ============================================================== */}
       {/* PROJECT HEADER CARD                                            */}
       {/* ============================================================== */}
-      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#11131a] p-6 shadow-sm">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] p-5 shadow-xs">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Visual Snapshot – Web / Mobile tabs */}
           <div className="lg:col-span-4 space-y-2">

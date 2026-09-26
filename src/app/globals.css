@@ -3,27 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #fafafa;
+  --foreground: #09090b;
   --card: #ffffff;
-  --card-foreground: #0f172a;
-  --border: #e2e8f0;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #2563eb;
-  --ring: #3b82f6;
+  --card-foreground: #09090b;
+  --border: #e4e4e7;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #18181b;
+  --ring: #18181b;
 }
 
 .dark {
-  --background: #090a0f;
-  --foreground: #f1f5f9;
-  --card: #11131a;
-  --card-foreground: #f1f5f9;
-  --border: #1e2230;
-  --muted: #161922;
-  --muted-foreground: #8b949e;
-  --accent: #3b82f6;
-  --ring: #60a5fa;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #121215;
+  --card-foreground: #fafafa;
+  --border: #27272a;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --accent: #fafafa;
+  --ring: #d4d4d8;
 }
 
 body {
@@ -31,12 +31,13 @@ body {
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.011em;
 }
 
-/* Custom subtle scrollbars */
+/* Minimalist scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -44,15 +45,24 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #3f3f46;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #52525b;
 }
 
-/* Progress bar fill transition */
+/* Smooth progress transitions */
 .progress-bar-fill {
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Monochromatic glow utility */
+.glow-subtle {
+  box-shadow: 0 0 20px -5px rgba(255, 255, 255, 0.05);
+}
+
+.glow-active {
+  box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.25);
 }

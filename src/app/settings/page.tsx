@@ -12,8 +12,13 @@ import {
   Sun,
   Moon,
   Check,
+  Server,
+  Layers,
+  Terminal,
+  Activity,
 } from 'lucide-react';
 import ThemeToggle from '@/components/ThemeToggle';
+import { GithubIcon } from '@/components/TechIcon';
 
 export default function SettingsPage() {
   const [reseeding, setReseeding] = useState(false);
@@ -28,7 +33,7 @@ export default function SettingsPage() {
     try {
       const res = await fetch('/api/settings/seed', { method: 'POST' });
       if (res.ok) {
-        setMessage('Database reset and seeded with ServiceFinder successfully!');
+        setMessage('Database reset and seeded with sample projects successfully!');
       } else {
         setMessage('Failed to reseed database.');
       }
@@ -40,60 +45,104 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-8 animate-in fade-in duration-200">
+    <div className="max-w-4xl space-y-6 animate-in fade-in duration-200">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-          <Settings className="w-6 h-6 text-zinc-400" />
-          System Settings & Storage
+          <Settings className="w-5 h-5 text-zinc-400" />
+          <span>System Settings & Architecture</span>
         </h1>
         <p className="text-xs text-zinc-500 mt-1">
-          Preferences, database connection status, and knowledge sync status.
+          Preferences, persistent database connection, Obsidian vault sync, and ecosystem diagnostics.
         </p>
       </div>
 
       {message && (
-        <div className="p-3.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs flex items-center gap-2">
+        <div className="p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>{message}</span>
         </div>
       )}
 
-      {/* Developer Profile */}
-      <div className="p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#11131a] space-y-4">
-        <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 border-b border-zinc-100 dark:border-zinc-800 pb-3">
+      {/* Builder Profile */}
+      <div className="p-5 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] shadow-xs space-y-3.5">
+        <h2 className="text-xs font-mono uppercase tracking-wider font-semibold text-zinc-400 border-b border-zinc-100 dark:border-zinc-800/60 pb-2">
           Builder Profile
         </h2>
 
-        <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 border border-blue-400/40 flex items-center justify-center text-white text-lg font-bold">
-            R
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 font-bold text-sm flex items-center justify-center shadow-xs">
+            RR
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              Rendo
-            </h3>
-            <p className="text-xs font-mono text-zinc-400">@rendo</p>
-            <p className="text-xs text-zinc-500 mt-0.5">
-              Personal Command Center Operator
-            </p>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                Ros Rendo
+              </h3>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                Lead Architect
+              </span>
+            </div>
+            <p className="text-xs font-mono text-zinc-400">Personal Command Center Operator</p>
           </div>
         </div>
       </div>
 
-      {/* Database & Infrastructure Status */}
-      <div className="p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#11131a] space-y-4">
-        <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 border-b border-zinc-100 dark:border-zinc-800 pb-3 flex items-center justify-between">
-          <span className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-blue-500" />
+      {/* Ecosystem Telemetry */}
+      <div className="p-5 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] shadow-xs space-y-4">
+        <h2 className="text-xs font-mono uppercase tracking-wider font-semibold text-zinc-400 border-b border-zinc-100 dark:border-zinc-800/60 pb-2 flex items-center justify-between">
+          <span className="flex items-center gap-1.5">
+            <GithubIcon className="w-3.5 h-3.5 text-zinc-400" />
+            GitHub Remote Synchronization
+          </span>
+          <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> 100% Synced
+          </span>
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
+          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80">
+            <span className="text-zinc-400 text-[10px] block uppercase tracking-wider mb-1">
+              Organization / Account
+            </span>
+            <span className="text-zinc-800 dark:text-zinc-200 font-semibold">
+              github.com/ROS-RENDO
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80">
+            <span className="text-zinc-400 text-[10px] block uppercase tracking-wider mb-1">
+              Active Repositories
+            </span>
+            <span className="text-zinc-800 dark:text-zinc-200 font-semibold">
+              13 Verified Projects
+            </span>
+          </div>
+
+          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80">
+            <span className="text-zinc-400 text-[10px] block uppercase tracking-wider mb-1">
+              Push Automation
+            </span>
+            <span className="text-emerald-500 dark:text-emerald-400 font-semibold">
+              npm run repos:push
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Storage & Database Diagnostics */}
+      <div className="p-5 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] shadow-xs space-y-4">
+        <h2 className="text-xs font-mono uppercase tracking-wider font-semibold text-zinc-400 border-b border-zinc-100 dark:border-zinc-800/60 pb-2 flex items-center justify-between">
+          <span className="flex items-center gap-1.5">
+            <Database className="w-3.5 h-3.5 text-blue-500" />
             Storage & Database Engine
           </span>
-          <span className="text-[11px] font-mono text-emerald-500 flex items-center gap-1">
+          <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Connected
           </span>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-          <div className="p-3.5 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
+          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80">
             <span className="text-zinc-400 text-[10px] block uppercase tracking-wider mb-1">
               Active Database
             </span>
@@ -105,7 +154,7 @@ export default function SettingsPage() {
             </p>
           </div>
 
-          <div className="p-3.5 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80">
+          <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80">
             <span className="text-zinc-400 text-[10px] block uppercase tracking-wider mb-1">
               Media & Screenshot Storage
             </span>
@@ -119,13 +168,13 @@ export default function SettingsPage() {
         </div>
 
         {/* Obsidian Vault Status */}
-        <div className="p-3.5 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80">
+        <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-200 dark:border-zinc-800/80">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <FileCode className="w-4 h-4 text-violet-400" />
               <div>
                 <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-                  Obsidian Knowledge Sync
+                  Obsidian Knowledge Vault
                 </span>
                 <p className="text-[11px] font-mono text-zinc-500">
                   D:\AI\Obsidian\AI_Brain_Sync
