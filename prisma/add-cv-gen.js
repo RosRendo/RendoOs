@@ -16,9 +16,9 @@ async function main() {
   });
 
   const projectData = {
-    name: 'CareerPrepster AI (CV-Gen)',
+    name: 'CV-Gen',
     slug: 'cv-gen',
-    description: 'AI-powered career studio featuring real-time ATS scoring, Google Gemini bullet-point optimizer, 10+ modern resume template archetypes, job URL scraper, and dynamic interview readiness studio.',
+    description: 'AI-powered resume builder and career studio featuring real-time ATS scoring, Google Gemini bullet-point optimizer, 10+ modern CV template archetypes, job URL scraper, and dynamic interview readiness studio.',
     status: 'ACTIVE',
     isPrimary: false,
     progress: 92,
