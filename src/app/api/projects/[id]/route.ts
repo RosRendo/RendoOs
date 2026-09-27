@@ -82,6 +82,7 @@ export async function PATCH(
       'isExtraRunning',
       'slug',
       'flowExplainer',
+      'databaseDesign',
     ];
 
     for (const field of allowedFields) {

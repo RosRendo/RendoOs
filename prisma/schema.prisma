@@ -31,6 +31,7 @@ model Project {
   overview         String?   // What is this? Who is it for? Why does it exist?
   techStack        String?   // JSON string with { frontend: [], backend: [], database: [], infrastructure: [] }
   architecture     String?   // Mermaid diagram code
+  databaseDesign   String?   // Database ERD (Mermaid ER diagram), table schemas, or SQL/Prisma schema
   flowExplainer    String?   // How it works: user journey, features, flow narrative (markdown)
   repoUrl          String?
   liveUrl          String?

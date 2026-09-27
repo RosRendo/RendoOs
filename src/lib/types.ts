@@ -75,6 +75,7 @@ export interface ProjectDetail {
   overview?: string | null;
   techStack?: string | null;
   architecture?: string | null;
+  databaseDesign?: string | null;
   flowExplainer?: string | null;
   repoUrl?: string | null;
   liveUrl?: string | null;

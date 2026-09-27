@@ -39,6 +39,7 @@ import MermaidViewer from '@/components/MermaidViewer';
 import TechIcon, { TechBadge, GithubIcon } from '@/components/TechIcon';
 import ProjectRunnerButton from '@/components/ProjectRunnerButton';
 import ReadmeViewer from '@/components/ReadmeViewer';
+import DatabaseDesignViewer from '@/components/DatabaseDesignViewer';
 import { getStatusBadge, getHealthBadge, formatTimeAgo, parseTechStack } from '@/lib/utils';
 import { ProjectDetail, TaskItem, BlockerItem, IdeaItem, LinkItem, TaskBucket } from '@/lib/types';
 
@@ -52,7 +53,8 @@ export default function ProjectDetailPage({
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'tasks' | 'overview' | 'readme' | 'flow' | 'architecture' | 'ideas'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'overview' | 'readme' | 'flow' | 'architecture' | 'database' | 'ideas'>('tasks');
+  const [hasDatabase, setHasDatabase] = useState(false);
   const [taskBucketFilter, setTaskBucketFilter] = useState<'ALL' | 'NOW' | 'NEXT' | 'LATER'>('ALL');
 
   // Quick inputs
@@ -106,6 +108,24 @@ export default function ProjectDetailPage({
         setMilestoneText(data.currentMilestone || '');
         setArchitectureCode(data.architecture || '');
         setFlowText(data.flowExplainer || '');
+
+        // Determine if project has a database
+        const tech = parseTechStack(data.techStack);
+        const dbList = (tech.database || []).filter(
+          (d) => !/localstorage|in-memory|content graph|none/i.test(d.toLowerCase())
+        );
+        const knownDbs = ['stackgen', 'cv-gen', 'pos-system', 'service-finder', 'estatex', 'orchestrator', 'journex', 'atelier-ecommerce', 'jarvis', 'techtune-healer', 'rendoos'];
+        const isDbProject = dbList.length > 0 || Boolean(data.databaseDesign) || knownDbs.includes(data.slug);
+        if (isDbProject) {
+          setHasDatabase(true);
+        } else {
+          fetch(`/api/projects/${data.id}/database`)
+            .then(r => r.ok ? r.json() : null)
+            .then(res => {
+              if (res?.hasDatabase) setHasDatabase(true);
+            })
+            .catch(() => {});
+        }
       } else {
         router.push('/projects');
       }
@@ -952,6 +972,7 @@ export default function ProjectDetailPage({
             { id: 'readme', label: 'README.md' },
             { id: 'flow', label: 'How It Works' },
             { id: 'architecture', label: 'Architecture' },
+            ...(hasDatabase ? [{ id: 'database', label: 'Database Design' }] : []),
             { id: 'ideas', label: 'Project Ideas', count: project.ideas?.length ?? 0 },
           ].map((tab) => (
             <button
@@ -1649,6 +1670,13 @@ export default function ProjectDetailPage({
             </div>
           )}
         </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* TAB CONTENT: DATABASE DESIGN                                   */}
+      {/* ============================================================== */}
+      {activeTab === 'database' && (
+        <DatabaseDesignViewer projectId={project.id} projectName={project.name} />
       )}
 
       {/* ============================================================== */}
