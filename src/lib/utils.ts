@@ -31,7 +31,7 @@ const TECH_CATEGORIES: Record<string, keyof TechStackData> = {
   'Python': 'backend', 'PHP': 'backend', 'Java': 'backend', 'Kotlin': 'backend',
   'C#': 'backend', '.NET': 'backend', 'ASP.NET': 'backend', 'GraphQL': 'backend',
   'REST': 'backend', 'gRPC': 'backend', 'tRPC': 'backend', 'WebSocket': 'backend',
-  'Stripe': 'backend', 'JWT': 'backend', 'OAuth': 'backend', 'Passport.js': 'backend',
+  'JWT': 'backend', 'OAuth': 'backend', 'Passport.js': 'backend',
   'Bull': 'backend', 'BullMQ': 'backend', 'Cron': 'backend', 'Socket.io': 'backend',
   'Prisma': 'backend', 'Drizzle': 'backend', 'TypeORM': 'backend', 'Sequelize': 'backend',
   'Mongoose': 'backend', 'Axios': 'backend', 'Zod': 'backend',
@@ -56,10 +56,22 @@ const TECH_CATEGORIES: Record<string, keyof TechStackData> = {
   'Prometheus': 'infrastructure', 'Grafana': 'infrastructure', 'Sentry': 'infrastructure',
   'Datadog': 'infrastructure', 'New Relic': 'infrastructure', 'OpenTelemetry': 'infrastructure',
   'GitHub': 'infrastructure', 'Git': 'infrastructure',
+
+  // AI & Machine Learning
+  'OpenAI': 'ai', 'Anthropic': 'ai', 'Claude': 'ai', 'Gemini': 'ai', 'ChatGPT': 'ai',
+  'LangChain': 'ai', 'LlamaIndex': 'ai', 'Ollama': 'ai', 'Hugging Face': 'ai', 'HuggingFace': 'ai',
+  'DeepSeek': 'ai', 'Whisper': 'ai', 'PyTorch': 'ai', 'TensorFlow': 'ai', 'vLLM': 'ai',
+  'CrewAI': 'ai', 'AutoGen': 'ai', 'Transformers': 'ai', 'Vector DB': 'ai',
+
+  // External Services & APIs
+  'Stripe': 'services', 'PayPal': 'services', 'ABA PayWay': 'services', 'ABA Bank': 'services',
+  'Twilio': 'services', 'SendGrid': 'services', 'Resend': 'services', 'Clerk': 'services',
+  'Auth0': 'services', 'Google Maps': 'services', 'Cloudinary': 'services',
+  'Pusher': 'services', 'PostHog': 'services', 'Mixpanel': 'services', 'Algolia': 'services',
 };
 
 export function parseTechStack(raw?: string | null): TechStackData {
-  const empty: TechStackData = { frontend: [], backend: [], database: [], infrastructure: [] };
+  const empty: TechStackData = { frontend: [], backend: [], database: [], infrastructure: [], ai: [], services: [] };
   if (!raw) return empty;
 
   try {
@@ -72,12 +84,14 @@ export function parseTechStack(raw?: string | null): TechStackData {
         backend: parsed.backend || [],
         database: parsed.database || [],
         infrastructure: parsed.infrastructure || [],
+        ai: parsed.ai || parsed.AI || [],
+        services: parsed.services || parsed.externalServices || [],
       };
     }
 
     // If it's a flat array, auto-categorize each entry
     if (Array.isArray(parsed)) {
-      const result: Record<string, string[]> = { frontend: [], backend: [], database: [], infrastructure: [] };
+      const result: Record<string, string[]> = { frontend: [], backend: [], database: [], infrastructure: [], ai: [], services: [] };
       for (const tech of parsed as string[]) {
         // Try exact match first, then case-insensitive
         const cat =
@@ -98,7 +112,7 @@ export function parseTechStack(raw?: string | null): TechStackData {
     return empty;
   } catch {
     // Raw string fallback — treat as a single frontend tech
-    return { frontend: [raw], backend: [], database: [], infrastructure: [] };
+    return { frontend: [raw], backend: [], database: [], infrastructure: [], ai: [], services: [] };
   }
 }
 

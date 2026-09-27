@@ -61,6 +61,7 @@ export default function ProjectDetailPage({
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskBucket, setNewTaskBucket] = useState<TaskBucket>('NOW');
   const [newTaskPriority, setNewTaskPriority] = useState<'HIGH' | 'MEDIUM' | 'LOW'>('MEDIUM');
+  const [newTaskDueDate, setNewTaskDueDate] = useState('');
 
   const [newBlockerTitle, setNewBlockerTitle] = useState('');
   const [newBlockerDesc, setNewBlockerDesc] = useState('');
@@ -226,10 +227,12 @@ export default function ProjectDetailPage({
           title: newTaskTitle.trim(),
           bucket: newTaskBucket,
           priority: newTaskPriority,
+          dueDate: newTaskDueDate ? new Date(newTaskDueDate).toISOString() : undefined,
         }),
       });
       if (res.ok) {
         setNewTaskTitle('');
+        setNewTaskDueDate('');
         fetchProject();
       }
     } catch (err) {
@@ -544,8 +547,16 @@ export default function ProjectDetailPage({
   const techStack = parseTechStack(project.techStack);
 
   const nowTasks = project.tasks?.filter((t) => t.bucket === 'NOW') || [];
+  const nowTasksActive = nowTasks.filter((t) => t.status === 'TODO');
+  const nowTasksDone = nowTasks.filter((t) => t.status === 'DONE');
+
   const nextTasks = project.tasks?.filter((t) => t.bucket === 'NEXT') || [];
+  const nextTasksActive = nextTasks.filter((t) => t.status === 'TODO');
+  const nextTasksDone = nextTasks.filter((t) => t.status === 'DONE');
+
   const laterTasks = project.tasks?.filter((t) => t.bucket === 'LATER') || [];
+  const laterTasksActive = laterTasks.filter((t) => t.status === 'TODO');
+  const laterTasksDone = laterTasks.filter((t) => t.status === 'DONE');
 
   const activeBlockers = project.blockers?.filter((b) => !b.resolved) || [];
   const resolvedBlockers = project.blockers?.filter((b) => b.resolved) || [];
@@ -1016,7 +1027,7 @@ export default function ProjectDetailPage({
                 placeholder="Add next task... (Press Enter to save)"
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
-                className="flex-1 min-w-[200px] px-3 py-1.5 text-xs bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="flex-1 min-w-[180px] px-3 py-1.5 text-xs bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               <select
                 value={newTaskBucket}
@@ -1036,6 +1047,13 @@ export default function ProjectDetailPage({
                 <option value="MEDIUM">Med P2</option>
                 <option value="LOW">Low P3</option>
               </select>
+              <input
+                type="date"
+                value={newTaskDueDate}
+                onChange={(e) => setNewTaskDueDate(e.target.value)}
+                className="px-2 py-1.5 text-xs font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 focus:outline-none"
+                title="Optional due date"
+              />
               <button
                 type="submit"
                 disabled={!newTaskTitle.trim()}
@@ -1057,13 +1075,14 @@ export default function ProjectDetailPage({
                     </h3>
                   </div>
                   <span className="text-[11px] font-mono text-zinc-400">
-                    {nowTasks.filter((t) => t.status === 'DONE').length}/{nowTasks.length} Done
+                    {nowTasksDone.length}/{nowTasks.length} Done
                   </span>
                 </div>
 
+                {/* Active NOW Tasks */}
                 <div className="space-y-2">
-                  {nowTasks.length > 0 ? (
-                    nowTasks.map((task) => (
+                  {nowTasksActive.length > 0 ? (
+                    nowTasksActive.map((task) => (
                       <TaskRow
                         key={task.id}
                         task={task}
@@ -1072,12 +1091,37 @@ export default function ProjectDetailPage({
                         onChangeBucket={(b) => handleChangeTaskBucket(task.id, b)}
                       />
                     ))
+                  ) : nowTasksDone.length > 0 ? (
+                    <div className="text-center py-2 text-xs text-emerald-500 font-mono">
+                      ✓ All immediate priority tasks completed!
+                    </div>
                   ) : (
                     <div className="text-center py-4 text-xs text-zinc-500 font-mono">
                       No immediate tasks queued.
                     </div>
                   )}
                 </div>
+
+                {/* Visually Separated Completed NOW Tasks */}
+                {nowTasksDone.length > 0 && (
+                  <div className="pt-3 mt-3 border-t border-dashed border-zinc-200 dark:border-zinc-800/80 space-y-2">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-400">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                      <span>COMPLETED ({nowTasksDone.length})</span>
+                    </div>
+                    <div className="space-y-1.5">
+                      {nowTasksDone.map((task) => (
+                        <TaskRow
+                          key={task.id}
+                          task={task}
+                          onToggle={() => handleToggleTask(task.id, task.status)}
+                          onDelete={() => handleDeleteTask(task.id)}
+                          onChangeBucket={(b) => handleChangeTaskBucket(task.id, b)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* NEXT COLUMN */}
@@ -1090,13 +1134,14 @@ export default function ProjectDetailPage({
                     </h3>
                   </div>
                   <span className="text-[11px] font-mono text-zinc-400">
-                    {nextTasks.filter((t) => t.status === 'DONE').length}/{nextTasks.length} Done
+                    {nextTasksDone.length}/{nextTasks.length} Done
                   </span>
                 </div>
 
+                {/* Active NEXT Tasks */}
                 <div className="space-y-2">
-                  {nextTasks.length > 0 ? (
-                    nextTasks.map((task) => (
+                  {nextTasksActive.length > 0 ? (
+                    nextTasksActive.map((task) => (
                       <TaskRow
                         key={task.id}
                         task={task}
@@ -1105,12 +1150,37 @@ export default function ProjectDetailPage({
                         onChangeBucket={(b) => handleChangeTaskBucket(task.id, b)}
                       />
                     ))
+                  ) : nextTasksDone.length > 0 ? (
+                    <div className="text-center py-2 text-xs text-emerald-500 font-mono">
+                      ✓ All follow-up tasks completed!
+                    </div>
                   ) : (
                     <div className="text-center py-4 text-xs text-zinc-500 font-mono">
                       No follow-up tasks queued.
                     </div>
                   )}
                 </div>
+
+                {/* Visually Separated Completed NEXT Tasks */}
+                {nextTasksDone.length > 0 && (
+                  <div className="pt-3 mt-3 border-t border-dashed border-zinc-200 dark:border-zinc-800/80 space-y-2">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-400">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                      <span>COMPLETED ({nextTasksDone.length})</span>
+                    </div>
+                    <div className="space-y-1.5">
+                      {nextTasksDone.map((task) => (
+                        <TaskRow
+                          key={task.id}
+                          task={task}
+                          onToggle={() => handleToggleTask(task.id, task.status)}
+                          onDelete={() => handleDeleteTask(task.id)}
+                          onChangeBucket={(b) => handleChangeTaskBucket(task.id, b)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* LATER COLUMN */}
@@ -1123,13 +1193,14 @@ export default function ProjectDetailPage({
                     </h3>
                   </div>
                   <span className="text-[11px] font-mono text-zinc-400">
-                    {laterTasks.length} tasks
+                    {laterTasksDone.length}/{laterTasks.length} Done
                   </span>
                 </div>
 
+                {/* Active LATER Tasks */}
                 <div className="space-y-2">
-                  {laterTasks.length > 0 ? (
-                    laterTasks.map((task) => (
+                  {laterTasksActive.length > 0 ? (
+                    laterTasksActive.map((task) => (
                       <TaskRow
                         key={task.id}
                         task={task}
@@ -1138,12 +1209,37 @@ export default function ProjectDetailPage({
                         onChangeBucket={(b) => handleChangeTaskBucket(task.id, b)}
                       />
                     ))
+                  ) : laterTasksDone.length > 0 ? (
+                    <div className="text-center py-2 text-xs text-emerald-500 font-mono">
+                      ✓ All parked future tasks completed!
+                    </div>
                   ) : (
                     <div className="text-center py-4 text-xs text-zinc-500 font-mono">
                       No future tasks parked yet.
                     </div>
                   )}
                 </div>
+
+                {/* Visually Separated Completed LATER Tasks */}
+                {laterTasksDone.length > 0 && (
+                  <div className="pt-3 mt-3 border-t border-dashed border-zinc-200 dark:border-zinc-800/80 space-y-2">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-400">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                      <span>COMPLETED ({laterTasksDone.length})</span>
+                    </div>
+                    <div className="space-y-1.5">
+                      {laterTasksDone.map((task) => (
+                        <TaskRow
+                          key={task.id}
+                          task={task}
+                          onToggle={() => handleToggleTask(task.id, task.status)}
+                          onDelete={() => handleDeleteTask(task.id)}
+                          onChangeBucket={(b) => handleChangeTaskBucket(task.id, b)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1393,6 +1489,38 @@ export default function ProjectDetailPage({
                 <div className="flex flex-wrap gap-1.5">
                   {techStack.infrastructure && techStack.infrastructure.length > 0 ? (
                     techStack.infrastructure.map((t) => (
+                      <TechBadge key={t} name={t} />
+                    ))
+                  ) : (
+                    <span className="text-xs text-zinc-500 font-mono">Not specified</span>
+                  )}
+                </div>
+              </div>
+
+              {/* AI & Machine Learning */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-purple-400">
+                  <Sparkles className="w-3.5 h-3.5" /> AI & Machine Learning
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {techStack.ai && techStack.ai.length > 0 ? (
+                    techStack.ai.map((t) => (
+                      <TechBadge key={t} name={t} />
+                    ))
+                  ) : (
+                    <span className="text-xs text-zinc-500 font-mono">Not specified</span>
+                  )}
+                </div>
+              </div>
+
+              {/* External Services & APIs */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-1.5 text-xs font-mono font-semibold text-rose-400">
+                  <Layers className="w-3.5 h-3.5" /> External Services & APIs
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {techStack.services && techStack.services.length > 0 ? (
+                    techStack.services.map((t) => (
                       <TechBadge key={t} name={t} />
                     ))
                   ) : (
@@ -1880,6 +2008,18 @@ function TaskRow({
             {task.priority === 'MEDIUM' && (
               <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-500/10 text-amber-400">
                 P2
+              </span>
+            )}
+            {task.dueDate && (
+              <span
+                className={`inline-flex items-center gap-1 text-[9px] font-mono px-1.5 py-0.2 rounded border ${
+                  new Date(task.dueDate).getTime() < Date.now() && !isDone
+                    ? 'bg-rose-500/10 text-rose-400 border-rose-500/30'
+                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-400 border-zinc-200 dark:border-zinc-700'
+                }`}
+              >
+                <Calendar className="w-2.5 h-2.5" />
+                {new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
               </span>
             )}
           </div>

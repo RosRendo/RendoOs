@@ -47,6 +47,9 @@ export async function GET() {
       archivedCount,
       ideasCount,
       allProjects,
+      recentlyUpdatedProjects,
+      recentlyCompletedTasks,
+      recentlyAddedIdeas,
     ] = await Promise.all([
       prisma.project.count({ where: { status: 'ACTIVE' } }),
       prisma.project.count({ where: { status: 'EXPERIMENT' } }),
@@ -69,6 +72,59 @@ export async function GET() {
           tasks: {
             where: { status: 'TODO' },
             select: { id: true, title: true, dueDate: true },
+          },
+        },
+      }),
+      // Recently touched projects (not archived)
+      prisma.project.findMany({
+        where: { status: { not: 'ARCHIVED' } },
+        orderBy: { updatedAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          status: true,
+          progress: true,
+          updatedAt: true,
+          currentMilestone: true,
+        },
+      }),
+      // Recently completed tasks
+      prisma.task.findMany({
+        where: { status: 'DONE' },
+        orderBy: { updatedAt: 'desc' },
+        take: 6,
+        select: {
+          id: true,
+          title: true,
+          bucket: true,
+          priority: true,
+          updatedAt: true,
+          project: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      }),
+      // Recently added ideas
+      prisma.idea.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          createdAt: true,
+          project: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
           },
         },
       }),
@@ -131,6 +187,11 @@ export async function GET() {
         archived: archivedCount,
         ideas: ideasCount,
         total: activeCount + experimentCount + pausedCount,
+      },
+      recentActivity: {
+        projects: recentlyUpdatedProjects,
+        tasks: recentlyCompletedTasks,
+        ideas: recentlyAddedIdeas,
       },
       alerts,
     });

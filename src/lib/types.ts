@@ -9,7 +9,44 @@ export interface TechStackData {
   backend?: string[];
   database?: string[];
   infrastructure?: string[];
+  ai?: string[];
+  services?: string[];
   [category: string]: string[] | undefined;
+}
+
+export interface RecentActivityData {
+  projects: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    status: ProjectStatus;
+    progress: number;
+    updatedAt: string;
+    currentMilestone?: string | null;
+  }>;
+  tasks: Array<{
+    id: string;
+    title: string;
+    bucket: TaskBucket;
+    priority: TaskPriority;
+    updatedAt: string;
+    project: {
+      id: string;
+      name: string;
+      slug: string;
+    };
+  }>;
+  ideas: Array<{
+    id: string;
+    title: string;
+    description?: string | null;
+    createdAt: string;
+    project?: {
+      id: string;
+      name: string;
+      slug: string;
+    } | null;
+  }>;
 }
 
 export interface TaskItem {

@@ -22,6 +22,7 @@ import {
   Cpu,
   GitBranch,
   Radio,
+  Lightbulb,
 } from 'lucide-react';
 import { getStatusBadge, getHealthBadge, formatTimeAgo, parseTechStack } from '@/lib/utils';
 import { ProjectDetail } from '@/lib/types';
@@ -182,72 +183,123 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Minimalist High-Contrast Telemetry Ribbon ──────────────── */}
+      {/* ── Canonical Project Overview Counts (PRD Phase 1) ─────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-        <div className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] flex flex-col justify-between">
+        {/* ACTIVE */}
+        <button
+          onClick={() => setSelectedFilter('ALL')}
+          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${
+            selectedFilter === 'ALL'
+              ? 'border-emerald-500/50 bg-emerald-500/5 dark:bg-[#0d1612]'
+              : 'border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-emerald-500/30'
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Total Projects</span>
-            <FolderGit2 className="w-3.5 h-3.5 text-zinc-400" />
-          </div>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="text-xl font-bold font-mono text-zinc-900 dark:text-zinc-100">
-              {activeProjects.length}
+            <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-500 font-semibold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              ACTIVE
             </span>
-            <span className="text-[10px] font-mono text-zinc-400">tracked</span>
+            <Activity className="w-3.5 h-3.5 text-emerald-500/70" />
           </div>
-        </div>
-
-        <div className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Live Services</span>
-            <Radio className={`w-3.5 h-3.5 ${runningProjects.length > 0 ? 'text-emerald-500 animate-pulse' : 'text-zinc-400'}`} />
-          </div>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className={`text-xl font-bold font-mono ${runningProjects.length > 0 ? 'text-emerald-500' : 'text-zinc-500'}`}>
-              {runningProjects.length}
-            </span>
-            <span className="text-[10px] font-mono text-zinc-400">running</span>
-          </div>
-        </div>
-
-        <div className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Active Focus</span>
-            <Activity className="w-3.5 h-3.5 text-blue-500" />
-          </div>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="text-xl font-bold font-mono text-blue-500">
+          <div className="mt-2 flex items-baseline justify-between">
+            <span className="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-400 transition-colors">
               {stats?.counts?.active ?? 0}
             </span>
             <span className="text-[10px] font-mono text-zinc-400">in dev</span>
           </div>
-        </div>
+        </button>
 
-        <div className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] flex flex-col justify-between">
+        {/* EXPERIMENTS */}
+        <button
+          onClick={() => setSelectedFilter('EXPERIMENT')}
+          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${
+            selectedFilter === 'EXPERIMENT'
+              ? 'border-violet-500/50 bg-violet-500/5 dark:bg-[#130f1d]'
+              : 'border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-violet-500/30'
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Blockers</span>
-            <AlertTriangle className={`w-3.5 h-3.5 ${activeBlockers.length > 0 ? 'text-rose-500' : 'text-zinc-400'}`} />
-          </div>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className={`text-xl font-bold font-mono ${activeBlockers.length > 0 ? 'text-rose-500' : 'text-zinc-400'}`}>
-              {activeBlockers.length}
+            <span className="text-[10px] font-mono uppercase tracking-wider text-violet-400 font-semibold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+              EXPERIMENTS
             </span>
-            <span className="text-[10px] font-mono text-zinc-400">open</span>
+            <Sparkles className="w-3.5 h-3.5 text-violet-400/70" />
           </div>
-        </div>
+          <div className="mt-2 flex items-baseline justify-between">
+            <span className="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100 group-hover:text-violet-400 transition-colors">
+              {stats?.counts?.experiment ?? 0}
+            </span>
+            <span className="text-[10px] font-mono text-zinc-400">labs</span>
+          </div>
+        </button>
 
-        <div className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] flex flex-col justify-between">
+        {/* PAUSED */}
+        <button
+          onClick={() => setSelectedFilter('PAUSED')}
+          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${
+            selectedFilter === 'PAUSED'
+              ? 'border-amber-500/50 bg-amber-500/5 dark:bg-[#16120b]'
+              : 'border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-amber-500/30'
+          }`}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Git Ecosystem</span>
-            <GithubIcon className="w-3.5 h-3.5 text-zinc-400" />
-          </div>
-          <div className="mt-1 flex items-baseline gap-2">
-            <span className="text-xl font-bold font-mono text-emerald-500">
-              100%
+            <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-semibold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              PAUSED
             </span>
-            <span className="text-[10px] font-mono text-emerald-400/80">synced</span>
+            <Layers className="w-3.5 h-3.5 text-amber-400/70" />
           </div>
-        </div>
+          <div className="mt-2 flex items-baseline justify-between">
+            <span className="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100 group-hover:text-amber-400 transition-colors">
+              {stats?.counts?.paused ?? 0}
+            </span>
+            <span className="text-[10px] font-mono text-zinc-400">on hold</span>
+          </div>
+        </button>
+
+        {/* ARCHIVED */}
+        <Link
+          href="/archive"
+          className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-semibold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-zinc-500" />
+              ARCHIVED
+            </span>
+            <FolderGit2 className="w-3.5 h-3.5 text-zinc-400" />
+          </div>
+          <div className="mt-2 flex items-baseline justify-between">
+            <span className="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-300 transition-colors">
+              {stats?.counts?.archived ?? 0}
+            </span>
+            <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-0.5">
+              view <ChevronRight className="w-2.5 h-2.5" />
+            </span>
+          </div>
+        </Link>
+
+        {/* IDEAS */}
+        <Link
+          href="/ideas"
+          className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-sky-500/40 transition-colors flex flex-col justify-between group"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400 font-semibold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+              IDEAS
+            </span>
+            <Lightbulb className="w-3.5 h-3.5 text-sky-400/70" />
+          </div>
+          <div className="mt-2 flex items-baseline justify-between">
+            <span className="text-2xl font-bold font-mono text-zinc-900 dark:text-zinc-100 group-hover:text-sky-400 transition-colors">
+              {stats?.counts?.ideas ?? 0}
+            </span>
+            <span className="text-[10px] font-mono text-zinc-400 flex items-center gap-0.5">
+              inbox <ChevronRight className="w-2.5 h-2.5" />
+            </span>
+          </div>
+        </Link>
       </div>
 
       {/* ── Live Active Services Cockpit Banner (if any runner is active) ── */}
@@ -618,6 +670,163 @@ export default function DashboardPage() {
           </p>
         </div>
       )}
+
+      {/* ── SECTION: RECENT ACTIVITY (PRD Phase 1: What was I doing last time?) ── */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-zinc-400" />
+            <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-700 dark:text-zinc-300">
+              RECENT ACTIVITY
+            </h2>
+            <span className="text-[11px] text-zinc-400">
+              — Answering: &ldquo;What was I doing last time?&rdquo;
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          {/* 1. Recently Completed Tasks */}
+          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-100 dark:border-zinc-800/60">
+              <span className="text-[11px] font-mono font-semibold text-emerald-500 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Completed Tasks
+              </span>
+              <span className="text-[10px] font-mono text-zinc-400">
+                {stats?.recentActivity?.tasks?.length ?? 0} logged
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              {stats?.recentActivity?.tasks && stats.recentActivity.tasks.length > 0 ? (
+                stats.recentActivity.tasks.slice(0, 4).map((t: any) => (
+                  <div
+                    key={t.id}
+                    className="flex items-start gap-2 p-2 rounded-lg bg-zinc-50/60 dark:bg-zinc-900/40 text-xs"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-zinc-800 dark:text-zinc-200 line-through truncate">
+                        {t.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5 text-[10px] font-mono text-zinc-400">
+                        {t.project && (
+                          <Link
+                            href={`/projects/${t.project.slug || t.project.id}`}
+                            className="text-blue-500 hover:underline truncate max-w-[120px]"
+                          >
+                            {t.project.name}
+                          </Link>
+                        )}
+                        <span>•</span>
+                        <span>{formatTimeAgo(t.updatedAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-zinc-500 font-mono py-4 text-center">
+                  No recently completed tasks
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* 2. Recently Touched Projects */}
+          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-100 dark:border-zinc-800/60">
+              <span className="text-[11px] font-mono font-semibold text-blue-500 flex items-center gap-1.5">
+                <FolderGit2 className="w-3.5 h-3.5" />
+                Updated Projects
+              </span>
+              <span className="text-[10px] font-mono text-zinc-400">
+                latest saves
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              {stats?.recentActivity?.projects && stats.recentActivity.projects.length > 0 ? (
+                stats.recentActivity.projects.slice(0, 4).map((p: any) => {
+                  const sBadge = getStatusBadge(p.status);
+                  return (
+                    <Link
+                      key={p.id}
+                      href={`/projects/${p.slug || p.id}`}
+                      className="group flex items-start justify-between gap-2 p-2 rounded-lg bg-zinc-50/60 dark:bg-zinc-900/40 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors text-xs"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-blue-400 transition-colors truncate">
+                            {p.name}
+                          </span>
+                          <span className={`text-[9px] font-mono px-1 py-0.2 rounded border ${sBadge.bgColor} ${sBadge.textColor}`}>
+                            {p.status}
+                          </span>
+                        </div>
+                        {p.currentMilestone && (
+                          <p className="text-[10px] text-zinc-400 truncate mt-0.5">
+                            {p.currentMilestone}
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-[10px] font-mono text-zinc-400 shrink-0">
+                        {formatTimeAgo(p.updatedAt)}
+                      </span>
+                    </Link>
+                  );
+                })
+              ) : (
+                <p className="text-xs text-zinc-500 font-mono py-4 text-center">
+                  No active projects
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* 3. Recently Added Ideas */}
+          <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-100 dark:border-zinc-800/60">
+              <span className="text-[11px] font-mono font-semibold text-sky-400 flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5" />
+                Captured Ideas
+              </span>
+              <Link href="/ideas" className="text-[10px] font-mono text-zinc-400 hover:text-sky-400">
+                all ideas →
+              </Link>
+            </div>
+
+            <div className="space-y-2">
+              {stats?.recentActivity?.ideas && stats.recentActivity.ideas.length > 0 ? (
+                stats.recentActivity.ideas.slice(0, 4).map((i: any) => (
+                  <div
+                    key={i.id}
+                    className="p-2 rounded-lg bg-zinc-50/60 dark:bg-zinc-900/40 text-xs space-y-1"
+                  >
+                    <div className="flex items-start justify-between gap-1">
+                      <span className="font-medium text-zinc-800 dark:text-zinc-200 truncate">
+                        {i.title}
+                      </span>
+                      <span className="text-[10px] font-mono text-zinc-400 shrink-0">
+                        {formatTimeAgo(i.createdAt)}
+                      </span>
+                    </div>
+                    {i.project && (
+                      <span className="text-[10px] font-mono text-zinc-400">
+                        linked to: <span className="text-zinc-300">{i.project.name}</span>
+                      </span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-zinc-500 font-mono py-4 text-center">
+                  No ideas captured yet
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* ── SECTION: OTHER PROJECTS AT A GLANCE ───────────────────── */}
       <div>
