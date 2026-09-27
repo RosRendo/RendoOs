@@ -59,6 +59,9 @@ model Project {
   blockers         Blocker[]
   ideas            Idea[]
   links            Link[]
+  milestones       Milestone[]
+  activities       Activity[]
+  notes            Note[]
 }
 
 model Task {
@@ -113,4 +116,40 @@ model Link {
   updatedAt DateTime @updatedAt
 
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Milestone {
+  id          String    @id @default(uuid())
+  projectId   String
+  title       String
+  progress    Int       @default(0) // 0 to 100
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  order       Int       @default(0)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Activity {
+  id          String    @id @default(uuid())
+  projectId   String?
+  type        String    // TASK_COMPLETED, MILESTONE_UPDATED, PROJECT_UPDATED, BLOCKER_RESOLVED, IDEA_CREATED, NOTE_CREATED
+  title       String
+  description String?
+  createdAt   DateTime  @default(now())
+
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id          String    @id @default(uuid())
+  projectId   String?
+  title       String
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }

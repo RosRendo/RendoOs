@@ -18,16 +18,19 @@ import {
   Square,
   Sparkles,
   Command,
+  CalendarCheck2,
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useState, useEffect, useRef } from 'react';
 import QuickAddModal from './QuickAddModal';
+import QuickCaptureModal, { CaptureType } from './QuickCaptureModal';
 import ScanProjectModal from './ScanProjectModal';
 
 const navItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderGit2 },
   { name: 'Ideas', href: '/ideas', icon: Lightbulb },
+  { name: 'Review', href: '/review', icon: CalendarCheck2 },
   { name: 'Archive', href: '/archive', icon: Archive },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
@@ -37,6 +40,8 @@ export default function Navbar() {
   const router = useRouter();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showScanModal, setShowScanModal] = useState(false);
+  const [showQuickCapture, setShowQuickCapture] = useState(false);
+  const [quickCaptureType, setQuickCaptureType] = useState<CaptureType>('TASK');
 
   // Quick Project Switcher State
   const [showSwitcher, setShowSwitcher] = useState(false);
@@ -76,6 +81,26 @@ export default function Navbar() {
   const activeServicesCount = projectsList.filter(
     (p) => p.isRunning || p.isBackendRunning || p.isExtraRunning
   ).length;
+
+  // Global Ctrl+K / Cmd+K listener for Quick Capture
+  useEffect(() => {
+    function handleGlobalKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setShowQuickCapture((prev) => !prev);
+      }
+    }
+    function handleOpenEvent(e: any) {
+      if (e.detail?.type) setQuickCaptureType(e.detail.type);
+      setShowQuickCapture(true);
+    }
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    window.addEventListener('open-quick-capture', handleOpenEvent);
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown);
+      window.removeEventListener('open-quick-capture', handleOpenEvent);
+    };
+  }, []);
 
   return (
     <>
@@ -205,6 +230,22 @@ export default function Navbar() {
               </div>
             )}
 
+            {/* Quick Capture (Ctrl+K) Button */}
+            <button
+              onClick={() => {
+                setQuickCaptureType('TASK');
+                setShowQuickCapture(true);
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium transition-colors cursor-pointer group"
+              title="Quick Capture (Ctrl + K)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span className="hidden sm:inline">Capture</span>
+              <kbd className="hidden lg:inline-flex text-[9px] font-mono px-1 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-200">
+                ⌘K
+              </kbd>
+            </button>
+
             <button
               onClick={() => setShowScanModal(true)}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium transition-colors cursor-pointer"
@@ -253,6 +294,13 @@ export default function Navbar() {
         </div>
       </header>
 
+      {showQuickCapture && (
+        <QuickCaptureModal
+          isOpen={showQuickCapture}
+          onClose={() => setShowQuickCapture(false)}
+          defaultType={quickCaptureType}
+        />
+      )}
       {showAddModal && <QuickAddModal onClose={() => setShowAddModal(false)} />}
       {showScanModal && <ScanProjectModal onClose={() => setShowScanModal(false)} />}
     </>

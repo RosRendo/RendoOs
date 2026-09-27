@@ -2,7 +2,7 @@ export type ProjectStatus = 'ACTIVE' | 'EXPERIMENT' | 'PAUSED' | 'ARCHIVED' | 'I
 export type TaskBucket = 'NOW' | 'NEXT' | 'LATER';
 export type TaskPriority = 'HIGH' | 'MEDIUM' | 'LOW';
 export type TaskStatus = 'TODO' | 'DONE';
-export type HealthStatus = 'HEALTHY' | 'ATTENTION' | 'BLOCKED';
+export type HealthStatus = 'HEALTHY' | 'ATTENTION' | 'BLOCKED' | 'INACTIVE';
 
 export interface TechStackData {
   frontend?: string[];
@@ -98,6 +98,46 @@ export interface LinkItem {
   createdAt: string;
 }
 
+export interface MilestoneItem {
+  id: string;
+  projectId: string;
+  title: string;
+  progress: number;
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+  order: number;
+  dueDate?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ActivityItem {
+  id: string;
+  projectId?: string | null;
+  type: string;
+  title: string;
+  description?: string | null;
+  createdAt: string;
+  project?: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+}
+
+export interface NoteItem {
+  id: string;
+  projectId?: string | null;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  project?: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+}
+
 export interface ProjectDetail {
   id: string;
   name: string;
@@ -136,4 +176,7 @@ export interface ProjectDetail {
   blockers: BlockerItem[];
   ideas: IdeaItem[];
   links: LinkItem[];
+  milestones?: MilestoneItem[];
+  activities?: ActivityItem[];
+  notes?: NoteItem[];
 }

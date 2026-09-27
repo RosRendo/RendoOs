@@ -28,6 +28,7 @@ import { getStatusBadge, getHealthBadge, formatTimeAgo, parseTechStack } from '@
 import { ProjectDetail } from '@/lib/types';
 import TechIcon, { TechBadge, GithubIcon } from '@/components/TechIcon';
 import ProjectRunnerButton from '@/components/ProjectRunnerButton';
+import TodayCommandCenter from '@/components/TodayCommandCenter';
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<any>(null);
@@ -157,6 +158,9 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-7 animate-in fade-in duration-200">
+      {/* ── SECTION: DAILY COMMAND CENTER (TODAY - PRD Phase 2) ─────── */}
+      <TodayCommandCenter onDataChange={fetchDashboardData} />
+
       {/* ── System Status Alerts ──────────────────────────────────── */}
       {stats?.alerts && stats.alerts.length > 0 && (
         <div className="space-y-2">

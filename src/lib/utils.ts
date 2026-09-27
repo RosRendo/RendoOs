@@ -120,25 +120,35 @@ export function calculateProjectHealth(project: {
   status: string;
   updatedAt?: string | Date;
   blockers?: { resolved: boolean }[];
-  tasks?: { status: string }[];
+  tasks?: { status: string; dueDate?: string | Date | null }[];
 }): HealthStatus {
-  // If there are unresolved blockers
+  // If project is archived or paused
+  if (project.status === 'ARCHIVED' || project.status === 'PAUSED') {
+    return 'INACTIVE';
+  }
+
+  // If there are unresolved blockers -> BLOCKED
   const hasUnresolvedBlockers = project.blockers?.some((b) => !b.resolved);
   if (hasUnresolvedBlockers) return 'BLOCKED';
 
   // Check days since last update
+  const now = Date.now();
   if (project.updatedAt) {
     const updated = new Date(project.updatedAt).getTime();
-    const now = Date.now();
     const daysSinceUpdate = (now - updated) / (1000 * 60 * 60 * 24);
-    if (project.status === 'ACTIVE' && daysSinceUpdate > 14) {
+    if (daysSinceUpdate >= 21) {
+      return 'INACTIVE';
+    }
+    if (project.status === 'ACTIVE' && daysSinceUpdate >= 7) {
       return 'ATTENTION';
     }
   }
 
-  // Check unfinished tasks count
-  const unfinishedCount = project.tasks?.filter((t) => t.status === 'TODO').length ?? 0;
-  if (project.status === 'ACTIVE' && unfinishedCount > 8) {
+  // Check overdue tasks -> ATTENTION
+  const hasOverdueTasks = project.tasks?.some(
+    (t) => t.status === 'TODO' && t.dueDate && new Date(t.dueDate).getTime() < now
+  );
+  if (hasOverdueTasks) {
     return 'ATTENTION';
   }
 
@@ -153,13 +163,23 @@ export function getHealthBadge(health: HealthStatus) {
         dotColor: 'bg-rose-500',
         textColor: 'text-rose-400',
         bgColor: 'bg-rose-500/10 border-rose-500/20',
+        indicator: '🔴',
       };
     case 'ATTENTION':
       return {
-        label: 'Needs attention',
+        label: 'Needs Attention',
         dotColor: 'bg-amber-400',
         textColor: 'text-amber-400',
         bgColor: 'bg-amber-400/10 border-amber-400/20',
+        indicator: '🟡',
+      };
+    case 'INACTIVE':
+      return {
+        label: 'Inactive',
+        dotColor: 'bg-zinc-400',
+        textColor: 'text-zinc-400',
+        bgColor: 'bg-zinc-500/10 border-zinc-500/20',
+        indicator: '⚪',
       };
     case 'HEALTHY':
     default:
@@ -168,6 +188,7 @@ export function getHealthBadge(health: HealthStatus) {
         dotColor: 'bg-emerald-400',
         textColor: 'text-emerald-400',
         bgColor: 'bg-emerald-400/10 border-emerald-400/20',
+        indicator: '🟢',
       };
   }
 }

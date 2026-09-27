@@ -40,6 +40,8 @@ import TechIcon, { TechBadge, GithubIcon } from '@/components/TechIcon';
 import ProjectRunnerButton from '@/components/ProjectRunnerButton';
 import ReadmeViewer from '@/components/ReadmeViewer';
 import DatabaseDesignViewer from '@/components/DatabaseDesignViewer';
+import MilestonesViewer from '@/components/MilestonesViewer';
+import ActivityTimeline from '@/components/ActivityTimeline';
 import { getStatusBadge, getHealthBadge, formatTimeAgo, parseTechStack } from '@/lib/utils';
 import { ProjectDetail, TaskItem, BlockerItem, IdeaItem, LinkItem, TaskBucket } from '@/lib/types';
 
@@ -53,7 +55,7 @@ export default function ProjectDetailPage({
 
   const [project, setProject] = useState<ProjectDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'tasks' | 'overview' | 'readme' | 'flow' | 'architecture' | 'database' | 'ideas'>('tasks');
+  const [activeTab, setActiveTab] = useState<'tasks' | 'overview' | 'milestones' | 'timeline' | 'readme' | 'flow' | 'architecture' | 'database' | 'ideas'>('tasks');
   const [hasDatabase, setHasDatabase] = useState(false);
   const [taskBucketFilter, setTaskBucketFilter] = useState<'ALL' | 'NOW' | 'NEXT' | 'LATER'>('ALL');
 
@@ -980,6 +982,8 @@ export default function ProjectDetailPage({
           {[
             { id: 'tasks', label: 'Tasks & Checklist', count: project.tasks?.length ?? 0 },
             { id: 'overview', label: 'Overview & Tech Stack' },
+            { id: 'milestones', label: 'Milestones' },
+            { id: 'timeline', label: 'Timeline' },
             { id: 'readme', label: 'README.md' },
             { id: 'flow', label: 'How It Works' },
             { id: 'architecture', label: 'Architecture' },
@@ -1531,6 +1535,20 @@ export default function ProjectDetailPage({
             </div>
           </div>
         </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* TAB CONTENT: MILESTONES (PRD Phase 2)                           */}
+      {/* ============================================================== */}
+      {activeTab === 'milestones' && (
+        <MilestonesViewer projectId={project.id} projectName={project.name} />
+      )}
+
+      {/* ============================================================== */}
+      {/* TAB CONTENT: ACTIVITY TIMELINE (PRD Phase 2)                    */}
+      {/* ============================================================== */}
+      {activeTab === 'timeline' && (
+        <ActivityTimeline projectId={project.id} projectName={project.name} />
       )}
 
       {/* ============================================================== */}
