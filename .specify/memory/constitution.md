@@ -26,11 +26,25 @@
   5. *What is blocked, and what can I safely ignore?*
 - Every screen, card, and interaction must minimize cognitive friction. Keep controls immediate, visible, and low-latency.
 
-### III. Premium Aesthetics & Dynamic UX
-- Dark-mode first with curated, rich palettes (deep slates `#090a0f`, `#0d1117`, `#161b22`, accents in indigo, violet, emerald, amber).
-- High visual craft: subtle glassmorphism borders (`border-white/10`), ambient radial glows, and responsive hover feedback.
-- Micro-interactions: snappy transitions, instant optimistic toggles, clear visual cues for health and status (`🟢 Healthy`, `🟡 Attention`, `🔴 Blocked`, `⚪ Inactive`).
-- Zero placeholder content: all mock or sample assets must be realistic and context-aware.
+### III. Master UI/UX Design System (Notion's Calmness + Linear's Precision)
+- **Flow Over Components**: Design the information flow first; components exist to support the flow, not the other way around. Never force unrelated cards into arbitrary 4-column grids.
+- **Content-First & Calm**: The user should look at any screen for 2–3 seconds and instantly understand: *Where am I? What is this area for? What matters right now? What can I do next?*
+- **Restrained Semantic Palette**: 80–90% neutral foundation with 10–20% semantic accents. Color must have meaning:
+  - **Indigo/Violet**: Primary interaction, system identity, active navigation.
+  - **Blue**: Information, technical systems, infrastructure, links.
+  - **Green**: Completed, healthy, active, successful.
+  - **Amber**: Attention, pending, needs review.
+  - **Rose/Red**: Destructive, error, blocked, critical.
+  - **Purple**: AI, automation, intelligence.
+  - **Cyan**: Integrations, external systems.
+- **Surface & Form Craft**:
+  - Warm, soft neutrals (deep charcoal `#0d1117` in dark mode, warm off-white in light mode). Never pure `#000000` or `#FFFFFF`.
+  - Crisp 1px low-contrast borders; restrained shadows (only for dropdowns, popovers, and modals).
+  - Consistent border radii: 6px controls, 8px buttons, 10–12px cards/containers, 16px dialogs. Avoid turning every button into a pill.
+  - Quiet progress bars and subtle status dots (`●`).
+- **Anti-AI-Slop & Anti-Bloat**:
+  - Strictly avoid: neon glows, glassmorphism, gradient overloads, decorative emoji on every heading, fake KPI metric cards, and oversized hero sections.
+  - Grayscale rule: If the visual hierarchy fails when viewed in grayscale without color and shadows, the layout is weak.
 
 ### IV. Technology Stack & Architectural Standards
 - **Framework**: Next.js 15 (App Router) + React 19 + TypeScript (Strict).
