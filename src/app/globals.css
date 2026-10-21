@@ -15,15 +15,15 @@
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #121215;
-  --card-foreground: #fafafa;
+  --background: #090a0f;
+  --foreground: #f4f4f5;
+  --card: #0c0d12;
+  --card-foreground: #f4f4f5;
   --border: #27272a;
   --muted: #18181b;
   --muted-foreground: #a1a1aa;
-  --accent: #fafafa;
-  --ring: #d4d4d8;
+  --accent: #2563eb;
+  --ring: #3b82f6;
 }
 
 body {

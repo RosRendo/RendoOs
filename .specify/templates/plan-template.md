@@ -1,94 +1,113 @@
-# Technical Implementation Plan: [FEATURE_NAME]
+# Implementation Plan: [FEATURE]
 
-**Feature Directory**: `specs/[NNN-feature-name]`  
-**Date**: [DATE]  
-**Spec Link**: [spec.md](spec.md)  
-**Status**: [Draft | Ready for Implementation | Complete]
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 
----
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
-## 1. Architecture Summary
-<!-- Concise explanation of technical approach and system impact -->
-[High-level summary of architecture, data flow, and components involved]
+**Note**: This template is filled in by the `/speckit-plan` command; its definition describes the execution workflow.
 
----
+## Summary
 
-## 2. Technical Context & Constraints
-- **Language / Runtime**: Node.js 20+ / TypeScript (Strict)
-- **Framework**: Next.js 15 (App Router) + React 19
-- **Database / ORM**: SQLite (`prisma/dev.db`) + Prisma Client
-- **Target Route(s)**: [e.g. `/`, `/projects/[id]`, `/scanner`, `/api/...`]
-- **Performance Constraints**: [e.g. Instant optimistic UI response (<50ms), async background execution for long tasks]
+[Extract from feature spec: primary requirement + technical approach from research]
 
----
+## Technical Context
 
-## 3. Constitution Check
-*GATE: Must pass before writing code. If violations exist, justify in Section 7.*
-- [ ] Conforms to Spec-First workflow (spec.md reviewed and prioritized).
-- [ ] Maintains low developer overhead and simplicity (no unnecessary abstractions).
-- [ ] Complies with Next.js Server/Client component boundaries.
-- [ ] Adheres to dark mode visual design tokens and aesthetic standards.
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
 
----
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]
 
-## 4. Data Model & Schema Changes
-<!-- Describe changes to prisma/schema.prisma or new models -->
-```prisma
-// Example Prisma schema addition
-model NewEntity {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-```
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]
 
----
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
-## 5. API Contracts & Endpoints
-### `GET /api/[endpoint]`
-- **Query Params**: `?param=value`
-- **Response `200 OK`**:
-```json
-{
-  "items": []
-}
-```
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]
 
-### `POST /api/[endpoint]`
-- **Request Body**:
-```json
-{
-  "field": "value"
-}
-```
-- **Response `201 Created`**:
-```json
-{
-  "success": true
-}
-```
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 
----
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]
 
-## 6. Component Hierarchy & File Structure
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+
+## Constitution Check
+
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+
+[Gates determined based on constitution file]
+
+## Project Structure
+
+### Documentation (this feature)
+
 ```text
-src/
-├── app/
-│   ├── [route]/
-│   │   └── page.tsx           # Page view
-│   └── api/
-│       └── [endpoint]/
-│           └── route.ts       # Backend route handler
-├── components/
-│   └── [NewFeatureComponent].tsx # Interactive client component
-└── lib/
-    ├── types.ts               # TypeScript interface definitions
-    └── utils.ts               # Helper utilities
+specs/[###-feature]/
+├── plan.md              # This file (/speckit-plan command output)
+├── research.md          # Phase 0 output (/speckit-plan command)
+├── data-model.md        # Phase 1 output (/speckit-plan command)
+├── quickstart.md        # Phase 1 output (/speckit-plan command)
+├── contracts/           # Phase 1 output (/speckit-plan command)
+└── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
----
+### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
-## 7. Complexity & Trade-Offs
-| Decision | Rationale | Alternatives Considered & Rejected |
-| :--- | :--- | :--- |
-| [e.g. Direct SQLite via Prisma] | Simple, self-contained, zero cloud latency | Cloud PostgreSQL (unneeded overhead for local tool) |
+```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+src/
+├── models/
+├── services/
+├── cli/
+└── lib/
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
+```
+
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
+
+## Complexity Tracking
+
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

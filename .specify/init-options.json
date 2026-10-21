@@ -1,10 +1,9 @@
 {
-  "project_name": "Rendo Hub",
+  "ai": "agy",
+  "ai_skills": true,
   "feature_numbering": "sequential",
-  "integration": "antigravity",
-  "spec_directory": "specs",
-  "templates_directory": ".specify/templates",
-  "memory_directory": ".specify/memory",
-  "commands_directory": ".specify/commands",
-  "version": "1.0.0"
+  "here": true,
+  "integration": "agy",
+  "script": "ps",
+  "speckit_version": "1.0.8.dev0"
 }

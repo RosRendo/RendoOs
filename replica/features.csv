@@ -1,0 +1,15 @@
+feature,area,priority,original,clone,notes
+Calm Sidebar Navigation,Shell,must,yes,yes,Persistent grouped sidebar + minimal top action bar
+Global Quick Capture (⌘K),Shell,must,yes,yes,Tasks/Ideas/Notes/Blockers modal
+Today Command Center,Dashboard,must,yes,yes,Today focus anchor and tasks
+Active Services Telemetry,Dashboard,must,yes,yes,FE/BE running port detection
+Primary Focus Workbench,Dashboard,must,yes,yes,1-click runner and P1 tasks
+Repositories Catalog,Projects,must,yes,yes,Filtered grid with runner buttons
+Project Workspace Progressive Tabs,Project Detail,must,yes,yes,Responsive tabs for Overview/Arch/DB/Tasks/Notes
+Database Schema Viewer,Project Detail,should,yes,yes,Prisma schema inspection
+1-Click Project Runner,DevOps,must,yes,yes,FE/BE background process manager
+Stale Repo Triage,Review,should,yes,yes,Keep Active/Pause/Archive actions
+Captured Ideas Inbox,Knowledge,should,yes,yes,Inbox and status conversion
+Weekly Review Summary,Review,could,yes,yes,Activity summary and reflections
+Project Folder Scanner,System,should,yes,yes,Automated local repo scanner
+Prisma Studio Seed Manager,System,could,yes,yes,Database seed and inspection

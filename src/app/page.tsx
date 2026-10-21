@@ -192,11 +192,10 @@ export default function DashboardPage() {
         {/* ACTIVE */}
         <button
           onClick={() => setSelectedFilter('ALL')}
-          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${
-            selectedFilter === 'ALL'
+          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${selectedFilter === 'ALL'
               ? 'border-emerald-500/50 bg-emerald-500/5 dark:bg-[#0d1612]'
               : 'border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-emerald-500/30'
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-500 font-semibold flex items-center gap-1.5">
@@ -216,11 +215,10 @@ export default function DashboardPage() {
         {/* EXPERIMENTS */}
         <button
           onClick={() => setSelectedFilter('EXPERIMENT')}
-          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${
-            selectedFilter === 'EXPERIMENT'
+          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${selectedFilter === 'EXPERIMENT'
               ? 'border-violet-500/50 bg-violet-500/5 dark:bg-[#130f1d]'
               : 'border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-violet-500/30'
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-violet-400 font-semibold flex items-center gap-1.5">
@@ -240,11 +238,10 @@ export default function DashboardPage() {
         {/* PAUSED */}
         <button
           onClick={() => setSelectedFilter('PAUSED')}
-          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${
-            selectedFilter === 'PAUSED'
+          className={`p-3 text-left rounded-lg border transition-all flex flex-col justify-between group cursor-pointer ${selectedFilter === 'PAUSED'
               ? 'border-amber-500/50 bg-amber-500/5 dark:bg-[#16120b]'
               : 'border-zinc-200 dark:border-zinc-800/80 bg-white dark:bg-[#0c0d12] hover:border-amber-500/30'
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-semibold flex items-center gap-1.5">
@@ -849,31 +846,28 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-1 bg-zinc-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-xs font-mono">
               <button
                 onClick={() => setSelectedFilter('ALL')}
-                className={`px-2 py-0.5 rounded-md text-[11px] transition-colors ${
-                  selectedFilter === 'ALL'
+                className={`px-2 py-0.5 rounded-md text-[11px] transition-colors ${selectedFilter === 'ALL'
                     ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-xs font-semibold'
                     : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'
-                }`}
+                  }`}
               >
                 All ({activeProjects.length})
               </button>
               <button
                 onClick={() => setSelectedFilter('RUNNING')}
-                className={`px-2 py-0.5 rounded-md text-[11px] transition-colors ${
-                  selectedFilter === 'RUNNING'
+                className={`px-2 py-0.5 rounded-md text-[11px] transition-colors ${selectedFilter === 'RUNNING'
                     ? 'bg-white dark:bg-zinc-800 text-emerald-500 dark:text-emerald-400 shadow-xs font-semibold'
                     : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'
-                }`}
+                  }`}
               >
                 Live ({runningProjects.length})
               </button>
               <button
                 onClick={() => setSelectedFilter('EXPERIMENT')}
-                className={`px-2 py-0.5 rounded-md text-[11px] transition-colors ${
-                  selectedFilter === 'EXPERIMENT'
+                className={`px-2 py-0.5 rounded-md text-[11px] transition-colors ${selectedFilter === 'EXPERIMENT'
                     ? 'bg-white dark:bg-zinc-800 text-violet-500 dark:text-violet-400 shadow-xs font-semibold'
                     : 'text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300'
-                }`}
+                  }`}
               >
                 Experiments
               </button>
@@ -897,11 +891,10 @@ export default function DashboardPage() {
             return (
               <div
                 key={project.id}
-                className={`group relative rounded-xl border bg-white dark:bg-[#0c0d12] hover:border-zinc-300 dark:hover:border-zinc-700 transition-all p-4 flex flex-col justify-between ${
-                  isAnyRunning
+                className={`group relative rounded-xl border bg-white dark:bg-[#0c0d12] hover:border-zinc-300 dark:hover:border-zinc-700 transition-all p-4 flex flex-col justify-between ${isAnyRunning
                     ? 'border-emerald-500/40 ring-1 ring-emerald-500/20'
                     : 'border-zinc-200 dark:border-zinc-800/80 shadow-xs'
-                }`}
+                  }`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-2">

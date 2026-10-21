@@ -977,8 +977,8 @@ export default function ProjectDetailPage({
       {/* ============================================================== */}
       {/* SECTION TABS: TASKS | OVERVIEW | ARCHITECTURE | IDEAS           */}
       {/* ============================================================== */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800">
-        <nav className="flex space-x-6">
+      <div className="border-b border-zinc-200 dark:border-zinc-800 overflow-x-auto scrollbar-none">
+        <nav className="flex space-x-6 min-w-max">
           {[
             { id: 'tasks', label: 'Tasks & Checklist', count: project.tasks?.length ?? 0 },
             { id: 'overview', label: 'Overview & Tech Stack' },
